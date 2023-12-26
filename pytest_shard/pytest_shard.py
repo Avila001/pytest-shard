@@ -44,13 +44,7 @@ def filter_items_by_shard(
     items: Iterable[nodes.Node], shard_id: int, num_shards: int
 ) -> Sequence[nodes.Node]:
     """Computes `items` that should be tested in `shard_id` out of `num_shards` total shards."""
-    shards = [sha256hash(item.nodeid) % num_shards for item in items]
-
-    new_items = []
-    for shard, item in zip(shards, items):
-        if shard == shard_id:
-            new_items.append(item)
-    return new_items
+    return [item for idx, item in enumerate(items) if idx % num_shards == shard_id]
 
 
 def pytest_collection_modifyitems(config, items: List[nodes.Node]):
